@@ -1,51 +1,78 @@
 /*
   TODO
-  - Add color to the sand
-  - Add cursor
   - Add rock, water?
-  - Erase and clear?
-  - Parametrize sand size or grid size
+  - Improve clear
 */
 
 let grid = [];
 let hue = 200;
 
-function setup() {
-  createCanvas(400, 400); 
+let width = 800;
+let height = 600;
+let sand_size = 10; // width and height must be divisible by sand_size
 
-  //creates 40x40 array of 0s
-  grid = new Array(40*40).fill(0);
+let w_pixels = width / sand_size;
+
+let clear = false;
+
+function setup() {
+
+  createCanvas(width, height);
+
+  grid = new Array(width/sand_size*height/sand_size).fill(0);
 
   colorMode(HSB, 360, 255, 255);
 }
+
+
 
 function draw() {
   background(0);
 
   update();
 
-  if(mouseIsPressed) createSand();
+  if(mouseIsPressed && !clear) createSand();
+  if(mouseIsPressed && clear) clearSand();
 
   strokeWeight(0);
 
-  if( mouseX > 0 || mouseX < 400 || mouseY > 0 || mouseY < 400){
+  if( mouseX > 0 || mouseX < width || mouseY > 0 || mouseY < height){
     fill(hue, 255, 255);
-    square(mouseX, mouseY, 10);
+    square(mouseX, mouseY, sand_size);
   }
 
   for(let i=0; i<grid.length; i++){
     if(grid[i] > 0){
       fill(grid[i], 125, 175);
-      square(i%40*10, Math.floor(i/40)*10, 10);
+      square(i%w_pixels*sand_size, Math.floor(i/w_pixels)*sand_size, sand_size);
     }
   }
 }
 
+function keyPressed(){
+  if (key === 'c') {
+    clear = !clear;
+  }
+
+  if (key === 'e'){
+    eraseSand();
+  }
+}
+
 function createSand(){
-  if( mouseX <= 0 || mouseX >= 400 || mouseY <= 0 || mouseY >= 400) return;
-  grid[Math.floor(mouseY/10) * 40 + Math.floor(mouseX/10)] = hue;
+  if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height) return;
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = hue;
 
   hue = hue >= 360 ? 1 : hue+1;
+}
+
+function clearSand(){
+  if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height) return;
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = 0;
+}
+
+function eraseSand(){
+  grid.fill(0);
 }
 
 function update(){
@@ -58,16 +85,18 @@ function update(){
 function gravity(i){
   if(grid[i] == 0) return;
 
-  // todo - guarantee that i+39 and i+41 are actually adjacent and not on different sides of the canvas
+  let bellow = i + w_pixels;
+  let bellow_left = bellow - 1;
+  let bellow_right = bellow + 1;
 
-  if(grid[i+40] == 0){
-    grid[i+40] = grid[i];
+  if(grid[bellow] == 0){
+    grid[bellow] = grid[i];
     grid[i] = 0;
-  } else if(grid[i+39] == 0 && Math.floor((i+40)/40) == Math.floor((i+39)/40) ){
-    grid[i+39] = grid[i];
+  } else if(grid[bellow_left] == 0 && Math.floor((bellow)/w_pixels) == Math.floor((bellow_left)/w_pixels) ){
+    grid[bellow_left] = grid[i];
     grid[i] = 0;
-  } else if(grid[i+41] == 0 && Math.floor((i+40)/40) == Math.floor((i+41)/40)){
-    grid[i+41] = grid[i];
+  } else if(grid[bellow_right] == 0 && Math.floor((bellow)/w_pixels) == Math.floor((bellow_right)/w_pixels)){
+    grid[bellow_right] = grid[i];
     grid[i] = 0;
   }
 }
