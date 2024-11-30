@@ -24,6 +24,8 @@ function draw() {
 
   update();
 
+  if(mouseIsPressed) createSand();
+
   strokeWeight(0);
 
   if( mouseX > 0 || mouseX < 400 || mouseY > 0 || mouseY < 400){
@@ -33,26 +35,17 @@ function draw() {
 
   for(let i=0; i<grid.length; i++){
     if(grid[i] > 0){
-      fill(grid[i], 150, 200);
+      fill(grid[i], 125, 175);
       square(i%40*10, Math.floor(i/40)*10, 10);
     }
   }
 }
 
-function mouseDragged(){
+function createSand(){
   if( mouseX <= 0 || mouseX >= 400 || mouseY <= 0 || mouseY >= 400) return;
   grid[Math.floor(mouseY/10) * 40 + Math.floor(mouseX/10)] = hue;
 
   hue = hue >= 360 ? 1 : hue+1;
-}
-
-function mousePressed(){
-  if( mouseX <= 0 || mouseX >= 400 || mouseY <= 0 || mouseY >= 400) return;
-  grid[Math.floor(mouseY/10) * 40 + Math.floor(mouseX/10)] = hue;
-
-  hue = hue >= 360 ? 1 : hue+1;
-
-  console.log(grid);
 }
 
 function update(){
