@@ -1,7 +1,7 @@
 /*
   TODO
   - Add rock, water?
-  - Improve clear
+  - Increase sand spawn area
 */
 
 let grid = [];
@@ -9,11 +9,11 @@ let hue = 200;
 
 let width = 800;
 let height = 600;
-let sand_size = 10; // width and height must be divisible by sand_size
+let sand_size = 5; // width and height must be divisible by sand_size
 
 let w_pixels = width / sand_size;
 
-let clear = false;
+let erase = false;
 
 function setup() {
 
@@ -24,22 +24,15 @@ function setup() {
   colorMode(HSB, 360, 255, 255);
 }
 
-
-
 function draw() {
   background(0);
 
   update();
 
-  if(mouseIsPressed && !clear) createSand();
-  if(mouseIsPressed && clear) clearSand();
+  if(mouseIsPressed && !erase) createSand();
+  if(mouseIsPressed && erase) eraseSand();
 
   strokeWeight(0);
-
-  if( mouseX > 0 || mouseX < width || mouseY > 0 || mouseY < height){
-    fill(hue, 255, 255);
-    square(mouseX, mouseY, sand_size);
-  }
 
   for(let i=0; i<grid.length; i++){
     if(grid[i] > 0){
@@ -47,15 +40,20 @@ function draw() {
       square(i%w_pixels*sand_size, Math.floor(i/w_pixels)*sand_size, sand_size);
     }
   }
+
+  if( mouseX > 0 || mouseX < width || mouseY > 0 || mouseY < height){
+    fill(hue, erase ? 0 : 255, 255);
+    square(mouseX, mouseY, sand_size);
+  }
 }
 
 function keyPressed(){
-  if (key === 'c') {
-    clear = !clear;
+  if (key === 'e') {
+    erase = !erase;
   }
 
-  if (key === 'e'){
-    eraseSand();
+  if (key === 'c'){
+    clearSand();
   }
 }
 
@@ -68,13 +66,13 @@ function createSand(){
   hue = hue >= 360 ? 1 : hue+1;
 }
 
-function clearSand(){
+function eraseSand(){
   if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height) return;
   
   grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = 0;
 }
 
-function eraseSand(){
+function clearSand(){
   grid.fill(0);
 }
 
