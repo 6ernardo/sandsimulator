@@ -60,7 +60,9 @@ function keyPressed(){
 }
 
 function createSand(){
-  if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height) return;
+  if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height || //checks boundaries
+    grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] != 0) return; //checks if sand already exists there
+
   grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = hue;
 
   hue = hue >= 360 ? 1 : hue+1;
@@ -68,6 +70,7 @@ function createSand(){
 
 function clearSand(){
   if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height) return;
+  
   grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = 0;
 }
 
