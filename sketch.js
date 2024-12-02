@@ -1,7 +1,6 @@
 /*
   TODO
   - Add rock, water?
-  - Increase sand spawn area
 */
 
 let grid = [];
@@ -61,7 +60,14 @@ function createSand(){
   if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height || //checks boundaries
     grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] != 0) return; //checks if sand already exists there
 
-  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = hue;
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = hue; // center pixel, always draws
+
+  let random = Array.from({ length: 4 }, () => Math.random());
+
+  if(random[0]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + 1] = hue; //right
+  if(random[1]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) - 1] = hue; //left
+  if(random[2]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + w_pixels] = hue; // above
+  if(random[3]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + w_pixels] = hue; // bellow
 
   hue = hue >= 360 ? 1 : hue+1;
 }
