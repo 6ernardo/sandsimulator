@@ -14,6 +14,8 @@ let w_pixels = width / sand_size;
 
 let erase = false;
 
+let change_hue = false;
+
 function setup() {
 
   createCanvas(width, height);
@@ -69,12 +71,15 @@ function createSand(){
   if(random[2]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + w_pixels] = hue; // above
   if(random[3]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + w_pixels] = hue; // bellow
 
-  hue = hue >= 360 ? 1 : hue+1;
+// this way change of hue should be slower
+  hue = (hue >= 360 && change_hue) ? 1 : hue + 1;
+  change_hue = !change_hue;
 }
 
 function eraseSand(){
   if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height) return;
   
+  //increase area
   grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = 0;
 }
 
