@@ -51,16 +51,6 @@ function draw() {
 	}
 }
 
-function keyPressed() {
-	if (key === 'e') {
-		erase = !erase;
-	}
-
-	if (key === 'c') {
-		clear();
-	}
-}
-
 function createSand() {
 	if (mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height || //checks boundaries
 		grid[Math.floor(mouseY / sand_size) * w_pixels + Math.floor(mouseX / sand_size)] != 0) return; //checks if sand already exists there
