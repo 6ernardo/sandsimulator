@@ -1,20 +1,15 @@
-/*
-  TODO
-  - Add rock, water?
-*/
-
 let grid = [];
-let hue = 200;
 
 let width = 800;
 let height = 600;
 let sand_size = 5; // width and height must be divisible by sand_size
+let w_pixels = width / sand_size; // amount of particles (pixels) in width
 
-let w_pixels = width / sand_size;
+let erase_flag = false;
+let sand_flag = true;
 
-let erase = false;
-
-let change_hue = false;
+let hue = 200; // hue starting point. Gives diff colors to sand
+let change_hue = false; // toggles change of hue as particles spawn
 
 function setup() {
 
@@ -30,8 +25,9 @@ function draw() {
 
   update();
 
-  if(mouseIsPressed && !erase) createSand();
-  if(mouseIsPressed && erase) eraseSand();
+  if(mouseIsPressed && !erase_flag && sand_flag) createSand();
+  if(mouseIsPressed && !erase_flag && !sand_flag) createWood();
+  if(mouseIsPressed && erase_flag) eraseTool();
 
   strokeWeight(0);
 
@@ -40,10 +36,17 @@ function draw() {
       fill(grid[i], 125, 175);
       square(i%w_pixels*sand_size, Math.floor(i/w_pixels)*sand_size, sand_size);
     }
+    else if(grid[i] < 0){
+      fill(26, 255, Math.abs(grid[i]));
+      square(i%w_pixels*sand_size, Math.floor(i/w_pixels)*sand_size, sand_size);
+    }
   }
 
   if( mouseX > 0 || mouseX < width || mouseY > 0 || mouseY < height){
-    fill(hue, erase ? 0 : 255, 255);
+    if(sand_flag) fill(hue, 255, 255);
+    else if(erase_flag) fill(255, 0, 255);
+    else fill(26, 255, 100);
+    
     square(mouseX, mouseY, sand_size);
   }
 }
@@ -54,7 +57,7 @@ function keyPressed(){
   }
 
   if (key === 'c'){
-    clearSand();
+    clear();
   }
 }
 
@@ -68,7 +71,7 @@ function createSand(){
 
   if(random[0]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + 1] = hue; //right
   if(random[1]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) - 1] = hue; //left
-  if(random[2]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + w_pixels] = hue; // above
+  if(random[2]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) - w_pixels] = hue; // above
   if(random[3]>0.6) grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + w_pixels] = hue; // bellow
 
 // this way change of hue should be slower
@@ -76,14 +79,32 @@ function createSand(){
   change_hue = !change_hue;
 }
 
-function eraseSand(){
-  if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height) return;
-  
-  //increase area
-  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = 0;
+function createWood(){
+  if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height || //checks boundaries
+    grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] != 0) return; //checks if sand already exists there
+
+  let random = 50 + Math.random() * 35;
+
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = -random; // center pixel, always draws
+
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + 1] = -random; //right
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) - 1] = -random; //left
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) - w_pixels] = -random; // above
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + w_pixels] = -random; // bellow
 }
 
-function clearSand(){
+function eraseTool(){
+  if( mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height) return;
+  
+  //todo - increase area
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size)] = 0;
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + 1] = 0; //right
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) - 1] = 0; //left
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) - w_pixels] = 0; // above
+  grid[Math.floor(mouseY/sand_size) * w_pixels + Math.floor(mouseX/sand_size) + w_pixels] = 0; // bellow
+}
+
+function clear(){
   grid.fill(0);
 }
 
@@ -93,9 +114,9 @@ function update(){
   }
 }
 
-
 function gravity(i){
-  if(grid[i] == 0) return;
+  //so that void and wood are not affected
+  if(grid[i] <= 0) return;
 
   let bellow = i + w_pixels;
   let bellow_left = bellow - 1;
