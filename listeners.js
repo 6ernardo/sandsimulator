@@ -24,6 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('clear_button').addEventListener('click', () => {
-        clear();
+        clearAll();
     });
 });

@@ -94,7 +94,7 @@ function eraseTool() {
 	grid[Math.floor(mouseY / sand_size) * w_pixels + Math.floor(mouseX / sand_size) + w_pixels] = 0; // bellow
 }
 
-function clear() {
+function clearAll() {
 	grid.fill(0);
 }
 
