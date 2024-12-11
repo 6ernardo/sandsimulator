@@ -4,9 +4,16 @@ body {
 	padding: 0;
 	height: 100%;
 	display: flex;
+	flex-direction: column;
+	background-color: #141414;
+}
+
+.contents {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	background-color: #141414;
 }
 
 canvas {
@@ -39,4 +46,19 @@ button.selected {
 button:hover {
 	cursor: pointer;
 	background-color: #353535;
+}
+
+footer {
+	text-align: center;
+	color: #555555;
+	padding: 1rem;
+}
+
+footer a {
+	color: #555555;
+	text-decoration: none;
+}
+
+footer a:hover{
+	text-decoration: underline;
 }
