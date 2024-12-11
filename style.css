@@ -1,41 +1,42 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #141414;
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #141414;
 }
 
 canvas {
-  display: block;
-  cursor: none;
-  border-radius: 0.4rem;
+	display: block;
+	cursor: none;
+	border-radius: 0.4rem;
 }
 
 .button_container {
-  display: flex;
-  margin-top: 0.5rem;
-  justify-content: center;
-  gap: 1rem
+	display: flex;
+	margin-top: 0.5rem;
+	justify-content: center;
+	gap: 1rem
 }
 
 button {
-  background-color: #3b3b3b;
-  border-style: none;
-  color: #DADADA;
-  padding: 0.3rem;
-  border-radius: 0.1rem;
+	background-color: #3b3b3b;
+	border-style: none;
+	color: #DADADA;
+	padding: 0.3rem;
+	border-radius: 0.1rem;
 }
 
 button.selected {
-  border-style: solid;
-  border-width: 0.1rem;
-  border-color: #DADADA;
+	border-style: solid;
+	border-width: 0.1rem;
+	border-color: #DADADA;
 }
 
 button:hover {
-  cursor: pointer;
-  background-color: #353535;
+	cursor: pointer;
+	background-color: #353535;
 }
